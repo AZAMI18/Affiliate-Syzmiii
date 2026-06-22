@@ -1,287 +1,295 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Syzmi Store — Affiliate Dashboard</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SyzmiStore - Premium Digital Service</title>
+  
+  <!-- METADATA SEO BIAR WEBSITE LU MUNCUL DI PENCARIAN GOOGLE -->
+  <meta name="description" content="SyzmiStore - Solusi terbaik penyedia kebutuhan akun premium editor kreatif, optimasi boosting sosial media (SMM Panel) termurah, dan jasa pembuatan sistem website otomatis profesional." />
+  <meta name="keywords" content="smm panel indonesia, beli akun alight motion premium, jasa buat website murah, syzmistore, followers murah, suntik sosmed, syzmi store, syzmistoretgl.xyz" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- LINK LOGO (FAVICON) BIAR MUNCUL DI TAB BROWSER & DI SEBELAH NAMA WEB PAS DICARI GOOGLE -->
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="shortcut icon" type="image/png" href="favicon.png" />
+  
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght=300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
   <style>
-    body { background: linear-gradient(to right, #0f172a, #1e293b); color: white; font-family: 'Poppins', sans-serif; }
-    .crypto-gradient { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); box-shadow: 0 15px 35px rgba(99, 102, 241, 0.2); }
-    .glass-box { background-color: rgba(11, 18, 32, 0.85); backdrop-filter: blur(12px); border: 1px border-white/5; }
-    .glow-effect { box-shadow: 0 0 25px rgba(168, 85, 247, 0.1); }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #0f172a, #1e293b);
+      color: white;
+    }
+    #menu { right: -100%; }
+    #menu.nav-active { right: 0; }
+    .fade { opacity: 0; transition: opacity 1s; }
+    .fade.show { opacity: 1; }
+    .menu-item { opacity: 0; transform: translateX(100%); transition: all 0.6s ease; }
+    .menu-item.show { opacity: 1; transform: translateX(0); }
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between overflow-x-hidden">
 
-  <header class="w-full bg-black/40 backdrop-blur border-b border-white/10 p-4 sticky top-0 z-50">
-    <div class="max-w-md mx-auto flex justify-between items-center">
-      <h1 class="text-md font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Syzmi Affiliate</h1>
-      <div id="userInfoHeader" class="hidden items-center gap-2">
-        <span id="lblUserEmail" class="text-[10px] text-gray-400 font-mono max-w-[120px] truncate">loading...</span>
-        <button onclick="handleLogout()" class="text-[10px] bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded-md hover:bg-red-500 hover:text-white transition">Exit</button>
-      </div>
-    </div>
-  </header>
-
-  <main class="flex-grow max-w-md w-full mx-auto p-4 space-y-6">
-
-    <div id="authRequiredBox" class="glass-box rounded-3xl p-6 glow-effect text-center space-y-4">
-      <div class="text-3xl">🔒</div>
-      <div class="space-y-1">
-        <h3 class="text-lg font-black text-white">Akses Terkunci</h3>
-        <p class="text-xs text-gray-400">Silakan login menggunakan akun SyzmiStore Anda untuk membuka dashboard kemitraan affiliate.</p>
-      </div>
-      <a href="https://syzmistoretgl.xyz" id="lnkLoginGate" class="block w-full py-3 bg-indigo-600 hover:bg-indigo-700 font-bold text-xs uppercase tracking-widest rounded-xl transition text-center shadow-lg shadow-indigo-600/20">Otorisasi Akun Syzmi</a>
-    </div>
-
-    <div id="affiliateDashboard" class="hidden space-y-6">
+<body class="overflow-x-hidden">
+  
+  <header class="fixed top-0 left-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/5 shadow-md">
+    <div class="flex items-center justify-between px-6 py-4">
       
-      <div class="crypto-gradient rounded-3xl p-6 relative overflow-hidden text-white">
-        <div class="absolute top-[-20px] right-[-20px] w-32 h-32 bg-white/10 rounded-full blur-xl"></div>
-        <div class="flex justify-between items-start mb-6">
-          <div>
-            <p class="text-[10px] uppercase tracking-widest text-white/70 font-bold">Total Pendapatan Affiliate</p>
-            <h2 class="text-3xl font-black tracking-tight mt-1">Rp <span id="lblBalance">0</span></h2>
-          </div>
-          <span class="text-2xl">💰</span>
+      <a href="/" class="flex items-center gap-2 group">
+        <div class="w-9 h-9 bg-gradient-to-tr from-indigo-600 to-purple-500 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-all duration-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+          </svg>
         </div>
-        <div class="flex justify-between items-center pt-3 border-t border-white/15 text-[11px] font-mono text-white/90">
-          <div>
-            <p class="text-[9px] text-white/60">TOTAL USER DIAJAK</p>
-            <p class="font-bold text-xs"><span id="lblInvited">0</span> Nodes Verified</p>
-          </div>
-          <span class="bg-black/20 px-2 py-1 rounded-lg text-[9px] font-bold tracking-wide uppercase">Rate: Rp5.000 / Ref</span>
+        <span class="text-2xl font-black tracking-tight bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">SyzmiStore</span>
+      </a>
+
+      <button id="menu-btn" class="block lg:hidden text-white focus:outline-none">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+
+      <nav class="hidden lg:flex items-center space-x-6 text-base">
+        <a href="#home" class="hover:text-indigo-400 transition">Home</a>
+        <a href="#produk" class="hover:text-indigo-400 transition">Produk</a>
+        <a href="#testimoni" class="hover:text-indigo-400 transition">Testimoni</a>
+        <a href="#kontak" class="hover:text-indigo-400 transition">Kontak</a>
+        <a href="history" class="text-yellow-400 font-medium hover:brightness-110 transition">⏳ Riwayat</a>
+        <a href="airdrop.html" class="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-gray-300 hover:text-indigo-400 hover:bg-indigo-950/40 border border-indigo-500/20 rounded-xl transition-all">
+          <span>🎁</span>
+          <span>Airdrop Wallet</span>
+          <span class="text-[9px] bg-indigo-500 text-white px-1.5 py-0.5 rounded-full font-bold animate-pulse">NEW</span>
+        </a>
+        
+        <div id="authAreaDesktop">
+          <a href="login.html" id="btnGateDesktop" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-lg shadow-indigo-600/20">🔐 Masuk / Daftar</a>
         </div>
-      </div>
-
-      <div class="glass-box rounded-2xl p-4 space-y-2.5">
-        <h4 class="text-xs font-bold uppercase tracking-wider text-purple-400">🔗 Link Referral Anda</h4>
-        <div class="flex gap-2">
-          <input type="text" id="txtRefLink" readonly value="Memuat link..." class="flex-grow bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-gray-300 font-mono focus:outline-none" />
-          <button onclick="copyReferralLink()" class="px-4 bg-purple-600 hover:bg-purple-700 font-bold text-xs rounded-xl transition shrink-0">Copy</button>
-        </div>
-        <p class="text-[10px] text-gray-400 leading-relaxed">Sistem otomatis mencatat komisi Rp5.000 langsung masuk saldo jika ada user mendaftar lewat link ini.</p>
-      </div>
-
-      <div class="glass-box rounded-2xl p-5 space-y-4">
-        <h4 class="text-xs font-bold uppercase tracking-wider text-indigo-400 flex justify-between items-center">
-          <span>💳 Penarikan Dana (Withdraw)</span>
-          <span class="text-[9px] bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full font-mono border border-red-500/10">Min. Rp50k</span>
-        </h4>
-
-        <div id="wdAlert" class="hidden p-3 rounded-xl text-xs text-center border font-medium"></div>
-
-        <form id="wdForm" onsubmit="executeWithdrawRequest(event)" class="space-y-3">
-          <div class="grid grid-cols-2 gap-2">
-            <div class="space-y-1">
-              <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Metode WD</label>
-              <select id="optMethod" required class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-indigo-500">
-                <option value="DANA" class="bg-[#0f172a]">DANA</option>
-                <option value="GOPAY" class="bg-[#0f172a]">GOPAY</option>
-                <option value="OVO" class="bg-[#0f172a]">OVO</option>
-                <option value="BANK" class="bg-[#0f172a]">TRANSFER BANK</option>
-              </select>
-            </div>
-            <div class="space-y-1">
-              <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Nominal WD (Rp)</label>
-              <input type="number" id="numAmount" required min="50000" placeholder="Minimal 50000" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white font-mono focus:outline-none focus:border-indigo-500" />
-            </div>
-          </div>
-
-          <div class="space-y-1">
-            <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wide">Nomor Rekening / No E-Wallet</label>
-            <input type="text" id="txtAccount" required placeholder="Contoh: 085185xxxxxx atau nomor rekening bank" class="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-2.5 text-xs text-white font-mono focus:outline-none focus:border-indigo-500" />
-          </div>
-
-          <button type="submit" id="btnWdSubmit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-800 disabled:text-gray-500 disabled:cursor-not-allowed font-black text-xs uppercase tracking-widest rounded-xl transition">
-            Kirim Pengajuan WD
-          </button>
-        </form>
-      </div>
-
-      <div class="space-y-2">
-        <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 px-1">Ledger Riwayat WD</h4>
-        <div id="wdHistoryContainer" class="space-y-2">
-          <p class="text-xs text-gray-500 text-center py-4 font-mono">Belum ada riwayat penarikan.</p>
-        </div>
-      </div>
-
+      </nav>
     </div>
-  </main>
 
-  <footer class="py-4 text-center text-xs text-gray-600 bg-black/10">© 2026 SyzmiStore Terminal.</footer>
+    <nav id="menu" class="fixed top-0 right-[-100%] w-2/3 h-full bg-[#111827] transition-all duration-500 flex flex-col p-6 space-y-5 lg:hidden overflow-y-auto">
+      <button id="close-btn" class="self-end mb-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+      
+      <div id="authAreaMobile" class="menu-item w-full">
+        <a href="login.html" id="btnGateMobile" class="flex items-center justify-center py-3 bg-indigo-600 hover:bg-indigo-700 font-black text-xs uppercase tracking-widest rounded-xl transition shadow-md">🔐 Masuk / Daftar</a>
+      </div>
+      
+      <hr class="border-gray-800 menu-item">
 
+      <a href="#home" class="menu-item hover:text-indigo-400">Home</a>
+      <a href="#produk" class="menu-item hover:text-indigo-400">Produk</a>
+      <a href="#testimoni" class="menu-item hover:text-indigo-400">Testimoni</a>
+      <a href="#kontak" class="menu-item hover:text-indigo-400">Kontak</a>
+      <hr class="border-gray-800 menu-item">
+      
+      <a href="airdrop.html" class="menu-item flex items-center gap-3 px-4 py-3 bg-indigo-600/10 border border-indigo-500/20 text-indigo-400 font-bold rounded-2xl transition-all">
+        <span>🎁</span>
+        <span class="text-xs">Syzmi Airdrop Wallet</span>
+        <span class="ml-auto text-[9px] bg-indigo-500 text-white px-2 py-0.5 rounded-full uppercase tracking-wider animate-pulse">New</span>
+      </a>
+
+      <a href="history" class="menu-item text-yellow-400 font-bold">⏳ Riwayat Transaksi</a>
+      <a href="https://wa.me/6285185031248" target="_blank" class="menu-item hover:text-green-400">💬 Chat Admin</a>
+      <a href="https://whatsapp.com/channel/0029VbBUgARA89MfXNmPbP27" class="menu-item hover:text-indigo-300">🎬 Saluran Preset</a>
+      <a href="payment" class="menu-item hover:text-yellow-400">💳 Payment</a>
+    </nav>
+  </header>
+  
+  <section id="home" class="min-h-screen flex flex-col items-center justify-center text-center px-6 relative overflow-hidden bg-[#0b0f19]" data-aos="fade-up">
+    <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+      <div class="absolute inset-0 opacity-[0.03] bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:24px_24px]"></div>
+      <div class="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-indigo-600/25 rounded-full blur-[120px] transform -translate-x-1/2 -translate-y-1/2"></div>
+      <div class="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-purple-600/15 rounded-full blur-[150px] transform translate-x-1/2 translate-y-1/2"></div>
+    </div>
+    
+    <div class="relative z-10 px-4">
+      <h2 class="text-4xl md:text-6xl font-extrabold mb-4 tracking-tight text-white">
+        One-Step <span class="text-indigo-400">Digital Solutions</span>
+      </h2>
+      <p class="text-base md:text-xl max-w-2xl mx-auto mb-8 text-gray-300 leading-relaxed">
+        Selamat datang di <span class="font-bold text-indigo-300">SyzmiStore</span>. Solusi terbaik penyedia kebutuhan akun premium editor kreatif, optimasi boosting sosial media (SMM), hingga jasa pembuatan sistem website kustom profesional.
+      </p>
+      <a href="#produk" class="px-8 py-3.5 bg-indigo-500 rounded-xl text-lg font-semibold hover:bg-indigo-600 transition shadow-lg shadow-indigo-500/20 tracking-wide">
+        Jelajahi Layanan
+      </a>
+    </div>
+  </section>
+
+  <section id="produk" class="py-20 px-6 bg-[#0f172a]">
+    <div class="max-w-6xl mx-auto">
+      <h3 class="text-3xl font-bold text-center mb-4" data-aos="fade-up">Layanan Premium Kami</h3>
+      <p class="text-center text-gray-400 mb-16 max-w-md mx-auto" data-aos="fade-up" data-aos-delay="100">Pilih kategori layanan digital sesuai kebutuhan kreativitas dan bisnismu di bawah ini.</p>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-[#1e293b]/60 border border-gray-800 p-8 rounded-2xl shadow-xl hover:border-indigo-500 transition duration-300 flex flex-col justify-between" data-aos="fade-up" data-aos-delay="100">
+          <div>
+            <div class="w-14 h-14 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-6 text-indigo-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <h4 class="text-2xl font-bold text-white mb-3">Alight Motion Premium</h4>
+            <p class="text-gray-400 leading-relaxed mb-6 text-sm">Buka semua fitur pro, preset di bawah 5MB, tanpa watermark, and export XML lancar jaya.</p>
+          </div>
+          <a href="produkam" class="block w-full py-3 text-center bg-indigo-500 hover:bg-indigo-600 rounded-xl font-semibold transition text-sm">Beli Akun AM</a>
+        </div>
+
+        <div class="bg-[#1e293b]/60 border border-gray-800 p-8 rounded-2xl shadow-xl hover:border-pink-500 transition duration-300 flex flex-col justify-between" data-aos="fade-up" data-aos-delay="200">
+          <div>
+            <div class="w-14 h-14 bg-pink-500/10 rounded-xl flex items-center justify-center mb-6 text-pink-400">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <h4 class="text-2xl font-bold text-white mb-3">Suntik Sosial Media</h4>
+            <p class="text-gray-400 leading-relaxed mb-6 text-sm">Naikkan popularitas bisnismu secara instan dengan layanan optimasi followers, likes, views, dan subscribers.</p>
+          </div>
+          <a href="smmpanel" class="block w-full py-3 text-center bg-pink-500 hover:bg-pink-600 rounded-xl font-semibold transition text-sm">Order Suntik Sosmed</a>
+        </div>
+
+        <div class="bg-[#1e293b]/60 border border-gray-800 p-8 rounded-2xl shadow-xl hover:border-emerald-500 transition duration-300 flex flex-col justify-between" data-aos="fade-up" data-aos-delay="300">
+          <div>
+            <div class="w-14 h-14 bg-emerald-500/10 rounded-xl flex items-center justify-center mb-6 text-emerald-400">
+              <svg xmlns="http://www.w3.org/200xl" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+              </svg>
+            </div>
+            <h4 class="text-2xl font-bold text-white mb-3">Jasa Buat Website</h4>
+            <p class="text-gray-400 leading-relaxed mb-6 text-sm">Ingin punya web store otomatis, landing page promosi, portofolio kece, atau panel khusus?</p>
+          </div>
+          <a href="jasweb" target="_blank" class="block w-full py-3 text-center bg-emerald-500 hover:bg-emerald-600 rounded-xl font-semibold transition text-sm">Konsultasi Project</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section id="testimoni" class="py-20 px-6 text-center" data-aos="fade-right">
+    <h3 class="text-3xl font-bold text-center mb-12">Apa Kata Mereka</h3>
+    <div id="testimonial-box" class="max-w-3xl mx-auto bg-[#1e293b] p-6 rounded-2xl shadow-lg fade show">
+      <p id="testimonial-text">"Mantap banget, murah and aman!"</p>
+      <span id="testimonial-name" class="text-indigo-400 font-semibold">- Rizky</span>
+    </div>
+  </section>
+  
+  <section id="kontak" class="py-20 px-6 bg-[#0f172a]" data-aos="fade-up">
+    <h3 class="text-3xl font-bold text-center mb-6">Hubungi Kami</h3>
+    <p class="text-center mb-6">Pesan sekarang via WhatsApp</p>
+    <div class="flex justify-center">
+      <a href="https://wa.me/6285185031248" target="_blank" class="px-6 py-3 bg-green-500 rounded-xl hover:bg-green-600">Chat WhatsApp</a>
+    </div>
+  </section>
+  
+  <footer class="py-6 text-center text-gray-400 bg-black/50">
+    © 2026 SyzmiStore. All rights reserved.
+  </footer>
+  
   <script>
-    // Koneksi SDK Supabase Client Toko Lu, Bre
+    AOS.init({ duration: 1000 });
+
     const SUPABASE_URL = "https://jdmoyfgosnijwcifhfvr.supabase.co";
     const SUPABASE_ANON_KEY = "sb_publishable_PswkXyJwl5xQh_n4kvU9Kg_XJ1pFWqO";
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // MASUKKAN ALAMAT DOMAIN WEB UTAMA TOKO LU DI SINI (Tempat register user baru menangkap link)
-    const MAIN_STORE_DOMAIN = "https://syzmistore.com"; 
-
-    let loggedInUser = null;
-    let globalUserBalance = 0;
-
     window.addEventListener('DOMContentLoaded', async () => {
-      // Set dinamakan dinamis URL login gate agar mendeteksi origin domain saat ini
-      document.getElementById('lnkLoginGate').href = `${MAIN_STORE_DOMAIN}/login.html?redirect=${window.location.href}`;
-
-      // Cek apakah user sudah ter-otentikasi login
       const { data: { session } } = await supabaseClient.auth.getSession();
-      
-      if(session) {
-        loggedInUser = session.user;
-        document.getElementById('authRequiredBox').classList.add('hidden');
-        document.getElementById('userInfoHeader').classList.remove('hidden');
-        document.getElementById('lblUserEmail').textContent = loggedInUser.email;
-        
-        loadAffiliateDashboardData();
-      }
+      updateAuthNavbar(session ? session.user : null);
+
+      supabaseClient.auth.onAuthStateChange((event, session) => {
+        updateAuthNavbar(session ? session.user : null);
+      });
     });
 
-    async function loadAffiliateDashboardData() {
-      if(!loggedInUser) return;
-      document.getElementById('affiliateDashboard').classList.remove('hidden');
+    function updateAuthNavbar(user) {
+      const areaDesktop = document.getElementById('authAreaDesktop');
+      const areaMobile = document.getElementById('authAreaMobile');
 
-      try {
-        // 1. Ambil data profil keuangan affiliate milik user
-        let { data: affiliate, error } = await supabaseClient
-          .from('affiliate_accounts')
-          .select('*')
-          .eq('user_id', loggedInUser.id)
-          .maybeSingle();
+      if (user) {
+        const displayEmail = user.email.split('@')[0];
+        const initialLetter = displayEmail.charAt(0).toUpperCase();
 
-        if (affiliate) {
-          globalUserBalance = parseInt(affiliate.balance || 0);
-          document.getElementById('lblBalance').textContent = globalUserBalance.toLocaleString('id-ID');
-          document.getElementById('lblInvited').textContent = affiliate.total_invited;
-          
-          // Susun link referral kustom mengarah ke halaman login domain utama
-          document.getElementById('txtRefLink').value = `${MAIN_STORE_DOMAIN}/login.html?ref=${affiliate.referral_code}`;
-        }
+        // 1. DESKTOP PROFILE CARD WITH LOGO AVATAR
+        areaDesktop.innerHTML = `
+          <div class="flex items-center gap-3 bg-white/5 border border-white/10 pl-2 pr-3 py-1.5 rounded-2xl">
+            <div class="w-7 h-7 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center font-black text-xs text-white tracking-wider shadow shadow-indigo-500/50">
+              ${initialLetter}
+            </div>
+            <div class="flex flex-col text-left">
+              <span class="text-xs font-mono text-gray-200 font-bold max-w-[90px] truncate">${displayEmail}</span>
+              <button onclick="handleAccountLogout()" class="text-[9px] text-red-400 font-bold hover:underline text-left uppercase tracking-wider">Keluar</button>
+            </div>
+          </div>
+        `;
 
-        // 2. Ambil data ledger riwayat request penarikan uang (WD)
-        let { data: wdLogs } = await supabaseClient
-          .from('withdrawals')
-          .select('*')
-          .eq('user_id', loggedInUser.id)
-          .order('created_at', { ascending: false });
-
-        const historyBox = document.getElementById('wdHistoryContainer');
-        historyBox.innerHTML = "";
-
-        if(wdLogs && wdLogs.length > 0) {
-          wdLogs.forEach(log => {
-            const container = document.createElement('div');
-            container.className = "bg-[#0b1220]/60 border border-white/5 rounded-xl p-3 flex justify-between items-center text-xs";
-            const dateStr = new Date(log.created_at).toLocaleDateString('id-ID', {day: 'numeric', month: 'short'});
-            
-            let statusBadgeClass = "text-amber-400 bg-amber-500/10 border-amber-500/20";
-            if(log.status === 'APPROVED') statusBadgeClass = "text-emerald-400 bg-emerald-500/10 border-emerald-500/20";
-            if(log.status === 'REJECTED') statusBadgeClass = "text-red-400 bg-red-500/10 border-red-500/20";
-
-            container.innerHTML = `
-              <div class="space-y-0.5">
-                <p class="font-bold text-white">WD via ${log.payment_method}</p>
-                <p class="text-[10px] text-gray-500 font-mono">${dateStr} • Ke: ${log.payment_account}</p>
-              </div>
-              <div class="text-right space-y-1 font-mono">
-                <p class="font-black text-white">Rp ${parseInt(log.amount).toLocaleString('id-ID')}</p>
-                <span class="text-[9px] font-bold px-1.5 py-0.5 border rounded-md ${statusBadgeClass}">${log.status}</span>
-              </div>
-            `;
-            historyBox.appendChild(container);
-          });
-        } else {
-          historyBox.innerHTML = `<p class="text-xs text-gray-500 text-center py-4 font-mono">Belum ada riwayat penarikan.</p>`;
-        }
-
-      } catch(err) { console.error(err); }
-    }
-
-    // LOGIKA PROSES PENGAJUAN WD BARU (MINIMAL 50K VALIDATION)
-    async function executeWithdrawRequest(e) {
-      e.preventDefault();
-      if(!loggedInUser) return;
-
-      const amount = parseInt(document.getElementById('numAmount').value);
-      const method = document.getElementById('optMethod').value;
-      const account = document.getElementById('txtAccount').value.trim();
-      const alertBanner = document.getElementById('wdAlert');
-
-      alertBanner.className = "hidden p-3 rounded-xl text-xs text-center border font-medium";
-
-      // PROTEKSI SISI CLIENT 1: Cek Batas Minimal Rp 50.000
-      if(amount < 50000) {
-        alertBanner.textContent = "❌ Gagal: Batas pengajuan penarikan dana minimal adalah Rp 50.000!";
-        alertBanner.classList.add('bg-red-500/10', 'border-red-500/30', 'text-red-400');
-        alertBanner.classList.remove('hidden');
-        return;
-      }
-
-      // PROTEKSI SISI CLIENT 2: Cek Ketersediaan Saldo Akun
-      if(amount > globalUserBalance) {
-        alertBanner.textContent = "❌ Gagal: Saldo Anda tidak mencukupi untuk nominal pengajuan ini!";
-        alertBanner.classList.add('bg-red-500/10', 'border-red-500/30', 'text-red-400');
-        alertBanner.classList.remove('hidden');
-        return;
-      }
-
-      const btn = document.getElementById('btnWdSubmit');
-      btn.disabled = true;
-      btn.textContent = "MEMPROSES PENGAJUAN...";
-
-      try {
-        // Amankan saldo di database dengan memotong saldo secara real-time
-        const netBalance = globalUserBalance - amount;
-        await supabaseClient.from('affiliate_accounts').update({ balance: netBalance }).eq('user_id', loggedInUser.id);
-
-        // Masukkan data request penarikan ke tabel withdrawals
-        const { error } = await supabaseClient.from('withdrawals').insert([
-          { 
-            user_id: loggedInUser.id,
-            email: loggedInUser.email,
-            amount: amount,
-            payment_method: method,
-            payment_account: account,
-            status: 'PENDING'
-          }
-        ]);
-
-        if(error) throw error;
-
-        alertBanner.textContent = "🎉 Sukses! Pengajuan WD berhasil dikirim ke antrean admin. Tunggu proses verifikasi.";
-        alertBanner.classList.add('bg-emerald-500/10', 'border-emerald-500/30', 'text-emerald-400');
-        alertBanner.classList.remove('hidden');
-
-        document.getElementById('wdForm').reset();
-        loadAffiliateDashboardData(); // Refresh tampilan saldo baru & list logs
-
-      } catch(err) {
-        alert("Eror: " + err.message);
-      } finally {
-        btn.disabled = false;
-        btn.textContent = "Kirim Pengajuan WD";
+        // 2. MOBILE PROFILE CARD WITH LOGO AVATAR
+        areaMobile.innerHTML = `
+          <div class="flex flex-col items-center gap-3 bg-[#0b1220] border border-white/5 p-4 rounded-3xl text-center">
+            <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center font-black text-lg text-white shadow-lg shadow-indigo-600/30">
+              ${initialLetter}
+            </div>
+            <span class="text-xs font-mono text-indigo-400 font-bold truncate max-w-full">${user.email}</span>
+            <button onclick="handleAccountLogout()" class="w-full py-2.5 bg-red-600/20 text-red-400 border border-red-500/20 font-black text-xs uppercase tracking-widest rounded-xl transition hover:bg-red-600 hover:text-white">Keluar Akun</button>
+          </div>
+        `;
+      } else {
+        areaDesktop.innerHTML = `<a href="login.html" id="btnGateDesktop" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 font-bold text-xs uppercase tracking-wider rounded-xl transition shadow-lg shadow-indigo-600/20">🔐 Masuk / Daftar</a>`;
+        areaMobile.innerHTML = `<a href="login.html" id="btnGateMobile" class="flex items-center justify-center py-3 bg-indigo-600 hover:bg-indigo-700 font-black text-xs uppercase tracking-widest rounded-xl transition shadow-md">🔐 Masuk / Daftar</a>`;
       }
     }
 
-    function copyReferralLink() {
-      const linkInput = document.getElementById('txtRefLink');
-      linkInput.select();
-      linkInput.setSelectionRange(0, 99999);
-      navigator.clipboard.writeText(linkInput.value);
-      alert("Link referral sukses disalin ke clipboard!");
-    }
-
-    async function handleLogout() {
+    async function handleAccountLogout() {
       await supabaseClient.auth.signOut();
+      localStorage.clear();
       window.location.reload();
     }
+    
+    // HAMBURGER SCRIPT
+    const menuBtn = document.getElementById('menu-btn');
+    const closeBtn = document.getElementById('close-btn');
+    const menu = document.getElementById('menu');
+    const menuItems = document.querySelectorAll('.menu-item');
+    
+    menuBtn.addEventListener('click', () => {
+      menu.classList.add('nav-active');
+      menuItems.forEach((item, i) => {
+        setTimeout(() => item.classList.add('show'), i * 120);
+      });
+    });
+    
+    closeBtn.addEventListener('click', () => {
+      menu.classList.remove('nav-active');
+      menuItems.forEach(item => item.classList.remove('show'));
+    });
+    
+    // TESTIMONIALS RUNNER
+    const testimonials = [
+      { text: '"Mantap banget, murah dan aman!"', name: '- Rizky' },
+      { text: '"Service cepat, trusted seller!"', name: '- Dinda' },
+      { text: '"Udah langganan, selalu puas!"', name: '- Bagas' }
+    ];
+    let idx = 0;
+    const box = document.getElementById('testimonial-box');
+    const textEl = document.getElementById('testimonial-text');
+    const nameEl = document.getElementById('testimonial-name');
+    
+    setInterval(() => {
+      box.classList.remove('show');
+      setTimeout(() => {
+        idx = (idx + 1) % testimonials.length;
+        textEl.textContent = testimonials[idx].text;
+        nameEl.textContent = testimonials[idx].name;
+        box.classList.add('show');
+      }, 1000);
+    }, 4000);
   </script>
 </body>
 </html>
